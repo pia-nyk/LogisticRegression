@@ -6,9 +6,9 @@ import json
 
 FILE_NAME_TRAIN = 'train.csv' #replace this file name with the train file
 FILE_NAME_TEST = 'test.csv' #replace
-ALPHA = 1e-7
-EPOCHS = 20000
-MODEL_FILE = 'models/model5'
+ALPHA = 2
+EPOCHS = 50000
+MODEL_FILE = 'models/model8'
 train_flag = True
 
 logging.basicConfig(filename='output.log',level=logging.DEBUG)
@@ -19,7 +19,7 @@ def loadData(file_name):
     df = pd.read_csv(file_name)
     logging.info("Number of data points in the data set "+str(len(df)))
     y_df = df['output']
-    keys = ['company_rating','model_rating', 'bought_at', 'months_used', 'issues_rating']
+    keys = ['company_rating','model_rating', 'bought_at', 'months_used', 'issues_rating','resale_value']
     X_df = df.get(keys)
     return X_df, y_df
 
@@ -64,7 +64,7 @@ def accuracy(X, y, model):
 
     acc = (1.0 * c)/len(y) * 100           
 
-    print "accuracy is : "+str(acc)
+    return acc
 
 def predict(X,theta):
     arr = np.dot(X,theta)

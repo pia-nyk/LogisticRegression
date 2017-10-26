@@ -1,15 +1,14 @@
  
 import numpy as np 
-import math
 import logging
 import json
 from utility import *
 
 FILE_NAME_TRAIN = 'train.csv' #replace this file name with the train file
 FILE_NAME_TEST = 'test.csv' #replace
-ALPHA = 1e-7
-EPOCHS = 20000#keep this greater than or equl to 5000 strictly otherwise you will get an error
-MODEL_FILE = 'models/model5'
+ALPHA = 2.5
+EPOCHS = 70000#keep this greater than or equl to 5000 strictly otherwise you will get an error
+MODEL_FILE = 'models/model8'
 train_flag = False
 logging.basicConfig(filename='output.log',level=logging.DEBUG)
 
@@ -56,13 +55,14 @@ def train(theta, X, y, model):
 
 
 def predict(X,theta):
-    arr = np.dot(X,theta)
-    return 1 / (1.0 + np.exp(-1.0 * arr))    
+    arr = np.dot(X,theta.T)
+    return 1.0 / (1.0 + np.exp(-1.0 * arr))
 
 def costFunc(m,y,y_predicted):
     J = np.multiply(y,np.log(y_predicted)) + np.multiply((1 - y),np.log(1 - y_predicted))
     J = np.sum(J)
     J/=m
+    J = (-1.0)*J
     return J
 
 def calcGradients(X,y,y_predicted,m):
@@ -87,6 +87,7 @@ def main():
         model = train(theta, X, y, model)
         with open(MODEL_FILE,'w') as f:
             f.write(json.dumps(model))
+        print "Accuracy :",accuracy(X,y,model)
 
     else:
         model = {}
@@ -95,7 +96,7 @@ def main():
             X_df, y_df = loadData(FILE_NAME_TEST)
             X,y = normalizeTestData(X_df, y_df, model)
             X = appendIntercept(X)
-            accuracy(X,y,model)
+            print "Accuracy: ",accuracy(X,y,model)
 
 if __name__ == '__main__':
     main()           
